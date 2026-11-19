@@ -1,5 +1,5 @@
 class ListsController < ApplicationController
-  before_action :set_list, only: [ :show, :create ]
+  before_action :set_list, only: [ :show ]
   def index
     @lists = List.all
   end
@@ -10,12 +10,15 @@ class ListsController < ApplicationController
 
   def create
     @list = List.new(list_params)
-    @list.save
-
+    if @list.save
     redirect_to list_path(@list)
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def show
+    @movies = Movie.order(:title)
   end
 
    private

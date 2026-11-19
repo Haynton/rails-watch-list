@@ -1,2 +1,92 @@
-<h1>Lists#show</h1>
-<p>Find me in app/views/lists/show.html.erb</p>
+<div class="container py-5">
+  <div class="mb-4">
+    <%= link_to "← Retour aux listes", lists_path,
+        class: "text-secondary text-decoration-none small" %>
+  </div>
+
+  <header class="mb-4">
+    <p class="text-secondary mb-2">Liste de films</p>
+    <h1 class="h2 mb-0"><%= @list.name %></h1>
+  </header>
+
+  <section>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="h4 mb-0">Films de la liste</h2>
+      <span class="text-secondary small">
+        <%= @list.bookmarks.size %> film(s)
+      </span>
+    </div>
+
+    <% if @list.bookmarks.any? %>
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <% @list.bookmarks.includes(:movie).each do |bookmark| %>
+          <% movie = bookmark.movie %>
+
+          <div class="col">
+            <article class="card h-100 border shadow-sm">
+              <% if movie.poster_url.present? %>
+                <%= image_tag movie.poster_url,
+                    alt: "Affiche de #{movie.title}",
+                    class: "card-img-top",
+                    style: "height: 320px; object-fit: cover;" %>
+              <% end %>
+
+              <div class="card-body">
+                <h3 class="h5 card-title"><%= movie.title %></h3>
+                <p class="card-text text-secondary"><%= movie.overview %></p>
+
+                <% if movie.rating.present? %>
+                  <p class="small mb-2">
+                    <span class="fw-semibold">Note :</span>
+                    <%= movie.rating %>/10
+                  </p>
+                <% end %>
+
+                <% if bookmark.comment.present? %>
+                  <p class="small border-top pt-3 mb-3">
+                    <span class="fw-semibold mb-3">Commentaire :</span>
+                    <br>
+                    <%= bookmark.comment %>
+                  </p>
+                  <%= button_to "Supprimer le commentaire",
+                        bookmark_path(bookmark),
+                        method: :delete,
+                        class: "btn btn-outline-danger btn-sm" %>
+                <% end %>
+              </div>
+            </article>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="border rounded-3 p-5 text-center">
+        <h3 class="h5">Aucun film dans cette liste</h3>
+        <p class="text-secondary mb-0">
+          Choisissez un film dans le menu ci-dessous pour commencer.
+        </p>
+      </div>
+    <% end %>
+  </section>
+
+    <section class="card border-0 bg-light m-auto mt-5 mb-5 col-md-6">
+    <div class="card-body p-4">
+      <h2 class="h5 mb-3">Ajouter un film à cette liste</h2>
+
+      <%= simple_form_for [@list, Bookmark.new] do |f| %>
+        <%= f.association :movie,
+            collection: @movies,
+            label: "Film",
+            prompt: "Choisir un film",
+            label_method: :title,
+            input_html: { class: "form-select" } %>
+
+        <%= f.input :comment,
+            label: "Commentaire (facultatif)",
+            placeholder: "Pourquoi ajouter ce film ?",
+            input_html: { class: "form-control" } %>
+
+        <%= f.button :submit, "Ajouter le film", class: "btn btn-dark" %>
+      <% end %>
+    </div>
+  </section>
+</div>

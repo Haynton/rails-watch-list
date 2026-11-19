@@ -1,0 +1,8 @@
+.list-card {
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.list-card:hover {
+  border-color: #adb5bd !important;
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .06) !important;
+}
