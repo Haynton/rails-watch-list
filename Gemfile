@@ -25,12 +25,14 @@ gem "bootstrap", "~> 5.3"
 gem "autoprefixer-rails"
 gem "font-awesome-sass", "~> 6.1"
 gem "simple_form"
+gem "cloudinary"
 
 # dev config
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
   gem "bundler-audit", require: false
   gem "brakeman", require: false
+  gem "dotenv-rails"
   gem "rubocop-rails-omakase", require: false
 end
 
